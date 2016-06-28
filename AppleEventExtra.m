@@ -116,6 +116,33 @@
 	
 	return nil;
 }
+@end
 
+@implementation NSURL (AppleEventExtra)
+- (NSAppleEventDescriptor *)appleEventDescriptor
+{
+    NSAppleEventDescriptor *result = nil;
+    if ([self isFileURL]) {
+        CFDataRef data = CFURLCreateData(kCFAllocatorDefault, (__bridge CFURLRef)self, kCFStringEncodingUTF8, true);
+        result = [NSAppleEventDescriptor descriptorWithDescriptorType:typeFileURL
+                                                              bytes:CFDataGetBytePtr(data)
+                                                             length:CFDataGetLength(data)];
+        CFRelease(data);
+    } else {
+        result = [[self absoluteString] appleEventDescriptor];
+    }
+    return result;
+}
+@end
 
+@implementation NSArray (AppleEventExtra)
+- (NSAppleEventDescriptor *)appleEventDescriptor
+{
+    NSAppleEventDescriptor *list_desc = [NSAppleEventDescriptor listDescriptor];
+    for (id item in self) {
+        [list_desc insertDescriptor:[item appleEventDescriptor]
+                            atIndex:0];
+    }
+    return list_desc;
+}
 @end

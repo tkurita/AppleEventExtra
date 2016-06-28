@@ -12,3 +12,11 @@
 @interface NSNumber (AppleEventExtra)
 - (NSAppleEventDescriptor *) appleEventDescriptor;
 @end
+
+@interface NSURL (AppleEventExtra)
+- (NSAppleEventDescriptor *)appleEventDescriptor;
+@end
+
+@interface NSArray (AppleEventExtra)
+- (NSAppleEventDescriptor *)appleEventDescriptor;
+@end
