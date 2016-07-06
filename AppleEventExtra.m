@@ -16,9 +16,26 @@
 									   length:sizeof(a_value)];
 }
 
++ (NSAppleEventDescriptor *)descriptorWithLong:(long)a_value
+{
+#if __LP64__
+    DescType type = typeSInt64;
+#else
+    DescType type = typeSInt32;
+#endif
+    return [self descriptorWithDescriptorType:type
+                                        bytes:&a_value
+                                       length:sizeof(a_value)];
+}
+
 + (NSAppleEventDescriptor *)descriptorWithUnsignedLong:(unsigned long)a_value
 {
-	return [self descriptorWithDescriptorType:typeUInt32 
+#if __LP64__
+    DescType type = typeUInt64;
+#else
+    DescType type = typeUInt32;
+#endif
+    return [self descriptorWithDescriptorType:type
 										bytes:&a_value
 									   length:sizeof(a_value)];
 }
@@ -106,9 +123,9 @@
 	else if(strcmp(type, @encode(unsigned int)) == 0)
 		return [NSAppleEventDescriptor descriptorWithUnsignedLong:[self unsignedIntValue]];
 	else if(strcmp(type, @encode(long)) == 0)
-		return [NSAppleEventDescriptor descriptorWithInt32:[self longValue]];
+		return [NSAppleEventDescriptor descriptorWithLong:[self longValue]];
 	else if(strcmp(type, @encode(unsigned long)) == 0)
-		return [NSAppleEventDescriptor descriptorWithInt32:[self unsignedLongValue]];
+		return [NSAppleEventDescriptor descriptorWithUnsignedLong:[self unsignedLongValue]];
 	else if(strcmp(type, @encode(float)) == 0)
 		return [NSAppleEventDescriptor descriptorWithFloat:[self floatValue]];
 	else if(strcmp(type, @encode(double)) == 0)
